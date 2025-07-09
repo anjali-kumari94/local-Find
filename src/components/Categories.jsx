@@ -7,7 +7,7 @@ import jewelryImg2 from "../assets/handmadeclay.jpg.jpg";
 import potteryImg1 from "../assets/handpaintedmug.jpg.jpg";
 import potteryImg2 from "../assets/pottery.jpg.jpg";
 import textilesImg1 from "../assets/Crochet Coasters.jpg.jpg";
-import textilesImg2 from "../assets/Woven Wall Hanging.jpg";
+import textilesImg2 from "../assets/woven-wall-hanging.jpg";
 import woodworkImg1 from "../assets/Custom Wooden Sign.jpg.jpg";
 import woodworkImg2 from "../assets/woodenjewellerbox.jpg.jpg";
 import woodworkImg3 from "../assets/paintedwoodenframe.jpg.jpg";
