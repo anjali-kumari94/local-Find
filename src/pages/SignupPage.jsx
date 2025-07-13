@@ -18,7 +18,6 @@ const SignupPage = () => {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
-  const [signedUp, setSignedUp] = useState(false);
   const navigate = useNavigate();
 
   const validate = () => {
@@ -49,40 +48,9 @@ const SignupPage = () => {
       setErrors(validationErrors);
       return;
     }
-    setSignedUp(true);
+    // On successful signup, redirect to login with a query param
+    navigate("/login?registered=1");
   };
-
-  if (signedUp) {
-    // Show login form after signup
-    return (
-      <div className={gradientBg}>
-        <div className={cardStyle}>
-          <h2 className="text-3xl font-bold text-center mb-2">Welcome Back</h2>
-          <p className="text-center text-gray-500 mb-6">
-            Please sign in to your account
-          </p>
-          <form className="mt-4">
-            <label className="block font-medium">Email</label>
-            <input type="email" className={inputStyle} placeholder="Email" />
-            <label className="block font-medium">Password</label>
-            <input
-              type="password"
-              className={inputStyle}
-              placeholder="Password"
-            />
-            <button type="submit" className={buttonStyle}>
-              Sign In
-            </button>
-          </form>
-          <div className="text-center mt-2">
-            <a className="text-blue-400 text-sm hover:underline" href="#">
-              Forgot your password?
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className={gradientBg}>
