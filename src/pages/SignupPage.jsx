@@ -41,15 +41,33 @@ const SignupPage = () => {
     setErrors({ ...errors, [e.target.name]: undefined });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-    // On successful signup, redirect to login with a query param
-    navigate("/login?registered=1");
+    // Only send name, email, and password to the backend
+    const { name, email, password } = form;
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/v1/auth/register`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password }),
+        }
+      );
+      const data = await response.json();
+      if (response.ok && data.success) {
+        navigate("/login?registered=1");
+      } else {
+        setErrors({ api: data.message || "Registration failed" });
+      }
+    } catch (err) {
+      setErrors({ api: "Network error. Please try again." });
+    }
   };
 
   return (
@@ -128,3 +146,4 @@ const SignupPage = () => {
 };
 
 export default SignupPage;
+
