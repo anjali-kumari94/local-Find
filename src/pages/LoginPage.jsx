@@ -43,19 +43,23 @@ const LoginPage = () => {
       return;
     }
     setApiError("");
-    try  {
+    try {
       const response = await fetch(
         `${import.meta.env.VITE_API_BASE_URL}/api/v1/auth/login`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
+          credentials: "include",
         }
       );
       const data = await response.json();
-      if (response.ok) {
-        login(data.user || data); // Save user in context/localStorage
-        navigate("/"); // Redirect to home or dashboard
+      if (response.ok && data.success) {
+        const user = data.data.user;
+        const token = data.data.token;
+        login(user); // Save user in context/localStorage
+        // Optionally: localStorage.setItem('token', token);
+        navigate("/");
       } else {
         setApiError(data.message || "Login failed");
       }
@@ -127,4 +131,5 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
 
