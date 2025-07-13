@@ -31,7 +31,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <CartProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<App />} />
+            <Route path="*" element={<App />} />
             <Route path="/product/:productId" element={<ProductDetails />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/categories/crafts" element={<Categories />} />
@@ -70,3 +70,4 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     </AuthProvider>
   </ProductProvider>
 );
+
