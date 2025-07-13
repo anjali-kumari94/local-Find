@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const gradientBg =
   "bg-gradient-to-br from-blue-400 to-purple-500 min-h-screen flex items-center justify-center";
@@ -13,7 +14,12 @@ const linkStyle = "text-blue-500 hover:underline cursor-pointer";
 const LoginPage = () => {
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const registered = params.get("registered");
 
   const validate = () => {
     const newErrors = {};
@@ -29,14 +35,34 @@ const LoginPage = () => {
     setErrors({ ...errors, [e.target.name]: undefined });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-    // Handle login logic here
+    setApiError("");
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/v1/auth/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+          credentials: "include", //
+        }
+      );
+      const data = await response.json();
+      if (response.ok) {
+        login(data.user || data); // Save user in context/localStorage
+        navigate("/"); // Redirect to home or dashboard
+      } else {
+        setApiError(data.message || "Login failed");
+      }
+    } catch (err) {
+      setApiError("Network error. Please try again.");
+    }
   };
 
   return (
@@ -46,6 +72,11 @@ const LoginPage = () => {
         <p className="text-center text-gray-500 mb-6">
           Please sign in to your account
         </p>
+        {registered && (
+          <div className="text-green-600 text-sm mb-2">
+            Registration successful! Please log in.
+          </div>
+        )}
         <form className="mt-4" onSubmit={handleSubmit}>
           <label className="block font-medium">Email</label>
           <input
@@ -76,6 +107,9 @@ const LoginPage = () => {
           <button type="submit" className={buttonStyle}>
             Sign In
           </button>
+          {apiError && (
+            <div className="text-red-500 text-sm mb-2">{apiError}</div>
+          )}
         </form>
         <div className="text-center mt-2">
           <a className="text-blue-400 text-sm hover:underline" href="#">
@@ -94,3 +128,4 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
